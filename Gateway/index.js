@@ -1,28 +1,10 @@
-//Preparação das libs.
-const httpProxy = require('express-http-proxy');
-const express = require('express');
-var logger = require('morgan');
+// Importação das libs
+import gateway from "./src/gateway.js";
 
-//Iniciando app.
-const app = express();
+// Preparando porta.
+const port = process.env.PORT || 3000;
 
-//Log para depuração em nível de desenvolvimento.
-app.use(logger('dev'));
- 
-//Selecação do micro serviço.
-function selectProxyHost(req) {
-    if (req.path.startsWith('/serviceA'))
-        return 'http://localhost:8091/';
-    else if (req.path.startsWith('/serviceB'))
-        return 'http://localhost:8092/';
-}
- 
-//Requisição do microserviço.
-app.use((req, res, next) => {
-    httpProxy(selectProxyHost(req))(req, res, next);
-});
-
-//Subindo seviço.
-app.listen(3000, () => {
-    console.log('API Gateway running!');
+// Subindo seviço.
+gateway.listen(port, () => {
+    console.log('Servidor executando em http://localhost:'+port);
 });
